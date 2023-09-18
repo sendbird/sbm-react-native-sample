@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "182696163448",
+    "firebase_url": "https://sendbird-b58d6.firebaseio.com",
+    "project_id": "sendbird-b58d6",
+    "storage_bucket": "sendbird-b58d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182696163448:android:8cf7199483f20d48ad958d",
+        "android_client_info": {
+          "package_name": "com.tylerhammer.rn.notifications"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182696163448-4ffjq6onja6tmq37dnkoudfdh26jqpdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7xcrfWsoMGdNmCZc1Vt9ZyT3IS_5TSn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182696163448-4ffjq6onja6tmq37dnkoudfdh26jqpdf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "182696163448-0kle49k5lb7pi1cbrn2193sttbfjae02.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tylerhammer.rn.notifications"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

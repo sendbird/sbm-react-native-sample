@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: notifications-react-native-sample
+  description: React Native sample app for Sendbird Notifications
+  annotations:
+    github.com/project-slug: sendbird/notifications-react-native-sample
+spec:
+  type: library
+  lifecycle: production
+  owner: dep-client-platform
+  system: sendbird-notifications
