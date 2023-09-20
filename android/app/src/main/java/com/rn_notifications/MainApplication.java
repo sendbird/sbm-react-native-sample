@@ -1,4 +1,4 @@
-package com.tylerhammer.rn.notifications;
+package com.sendbird.com.notifications.reactnative;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

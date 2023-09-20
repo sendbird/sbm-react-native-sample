@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.tylerhammer.rn.notifications"
+    namespace "com.sendbird.com.notifications.reactnative"
     defaultConfig {
-        applicationId "com.tylerhammer.rn.notifications"
+        applicationId "com.sendbird.com.notifications.reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

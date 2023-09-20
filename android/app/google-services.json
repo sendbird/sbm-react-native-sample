@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:182696163448:android:8cf7199483f20d48ad958d",
         "android_client_info": {
-          "package_name": "com.tylerhammer.rn.notifications"
+          "package_name": "com.sendbird.com.notifications.reactnative"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "182696163448-0kle49k5lb7pi1cbrn2193sttbfjae02.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tylerhammer.rn.notifications"
+                "bundle_id": "com.sendbird.com.notifications.reactnative"
               }
             }
           ]
