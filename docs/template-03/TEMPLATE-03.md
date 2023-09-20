@@ -2,7 +2,7 @@
 
 ### Image & Text with two buttons
 
-key: `template-02`
+key: `template-03`
 
 **Required Variables**:
 
