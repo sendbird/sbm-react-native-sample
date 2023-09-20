@@ -5,6 +5,19 @@ Built in React Native using the core JavaScript SDK.
 
 ## Prerequisite
 
+### Sendbird Dashboard Setup
+
+In order to successfully utilize this sample application, you must create the following templates in your application.
+
+- [Text with one button](./docs//template-01/TEMPLATE-01.md)
+- [Text with two buttons](./docs//template-02/TEMPLATE-02.md)
+- [Image & Text with two buttons](./docs//template-03/TEMPLATE-03.md)
+- [Text only](./docs//template-04/TEMPLATE-04.md)
+
+_Please note that any template sent that does not match one of these four, will not be rendered or may render incorrectly._
+
+### Enviornment Setup
+
 - [Node](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
 - [Cocoapods](https://cocoapods.org/)
@@ -12,7 +25,7 @@ Built in React Native using the core JavaScript SDK.
 - [XCode Command Line Tools](https://facebook.github.io/react-native/docs/getting-started.html#xcode)
 - [Android Studio](https://developer.android.com/studio/) (+Android SDK/Google API)
 
-## Installation
+## Application Setup
 
 Step 1: Install dependencies
 
