@@ -12,29 +12,26 @@ export default function Template01({variables}) {
   const navigation = useNavigation();
   const globalSettings = useSelector(state => state.sendbird.globalSettings.themes[0]);
 
-  const handleButtonClick = useCallback(
-    async side => {
-      try {
-        const type = variables[`${side}_button_action.type`];
-        const data = variables[`${side}_button_action.data`];
+  const handleButtonClick = useCallback(async () => {
+    try {
+      const type = variables['button_action.type'];
+      const data = variables['button_action.data'];
 
-        if (type === 'web') {
-          const supported = await Linking.canOpenURL(data);
-          if (supported) {
-            await Linking.openURL(data);
-          }
+      if (type === 'web') {
+        const supported = await Linking.canOpenURL(data);
+        if (supported) {
+          await Linking.openURL(data);
         }
-
-        if (type === 'custom') {
-          // do something custom
-        }
-      } catch (error) {
-        console.log('Error opening link');
-        console.log(error);
       }
-    },
-    [variables],
-  );
+
+      if (type === 'custom') {
+        // do something custom
+      }
+    } catch (error) {
+      console.log('Error opening link');
+      console.log(error);
+    }
+  }, [variables]);
 
   return (
     <View style={styles.wrapper(globalSettings.notification, selectedTheme)}>

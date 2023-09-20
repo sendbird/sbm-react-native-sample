@@ -40,7 +40,7 @@ export default function Template03({variables}) {
         <Image
           style={{width: '100%', height: '100%'}}
           source={{
-            uri: variables['image_url.url'] || null,
+            uri: variables['banner.url'] || null,
           }}
         />
       </View>
