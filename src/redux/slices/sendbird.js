@@ -5,7 +5,6 @@ import SendbirdChat, {CollectionEventSource, SessionHandler} from '@sendbird/cha
 import {FeedChannelModule} from '@sendbird/chat/feedChannel';
 import {MessageCollectionInitPolicy, MessageFilter} from '@sendbird/chat/groupChannel';
 import {Platform} from 'react-native';
-import {FEED_CHANNEL_URL} from '../../constants';
 import {requestNotificationsPermission} from '../../utils';
 
 export let sb;
@@ -13,6 +12,7 @@ export let sb;
 const initialState = {
   isAuthenticated: false, // Used to force user to login page
   feedChannel: {},
+  currentChannelUrl: '',
   notifications: [],
   globalSettings: {},
   collection: null,
@@ -48,12 +48,13 @@ const slice = createSlice({
     },
     updateUnreadCount(state, action) {
       state.unreadCount = action.payload;
-    }
+    },
   },
   extraReducers: builder => {
     builder.addCase(initSendbird.fulfilled, (state, action) => {
-      const {globalSettings} = action.payload;
+      const {globalSettings, currentChannelUrl} = action.payload;
       state.globalSettings = globalSettings;
+      state.currentChannelUrl = currentChannelUrl;
       state.isAuthenticated = true;
     });
     builder.addCase(initCollection.fulfilled, (state, action) => {
@@ -90,7 +91,7 @@ export const {
   updateNotificationsLoading,
   updateHasNewNotifications,
   updateChannel,
-  updateUnreadCount
+  updateUnreadCount,
 } = slice.actions;
 
 async function registerCollectionHandlers(dispatch, collection) {
@@ -152,7 +153,6 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
             .catch(err => reject(err));
         },
         onSessionRefreshed: () => {
-          console.log('Session refreshed');
           // session is refreshed
         },
         onSessionError: err => {
@@ -161,7 +161,6 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
           // session refresh failed
         },
         onSessionClosed: () => {
-          console.log('onSessionClosed');
           dispatch(handleSignOut());
           // session is closed
         },
@@ -169,7 +168,11 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     );
 
     // Log in using only the API, not with Websocket to prevent unwanted MAU increases.
-    await sb.authenticateFeed(data.userId, data.token);
+    try {
+      await sb.authenticateFeed(data.userId, data.token);
+    } catch (error) {
+      throw error;
+    }
 
     // Storing the login information in AsyncStorage for later use
     await AsyncStorage.setItem(
@@ -178,6 +181,8 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
         appId: data.appId,
         userId: data.userId,
         token: data.token,
+        channelUrl: data.channelUrl,
+        isSignedIn: true,
       }),
     );
 
@@ -198,14 +203,13 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
       }
     }
 
-    // Since we're not using Websockets, we can immediately fetch the collection
-    dispatch(initCollection());
-
     return {
       globalSettings: globalSettings,
+      currentChannelUrl: data.channelUrl,
     };
   } catch (error) {
-    console.log(error);
+    console.log('initSendbird Error', error);
+    throw error;
   }
 });
 
@@ -217,8 +221,27 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
     // Check if we passed a new filter to the collection
     let selectedFilter = data?.selectedFilter || getState().sendbird.activeFilter;
 
-    // We'll always fetch the channel as it will be returned by the cache if nothing has changed
-    const channel = await sb.feedChannel.getChannel(FEED_CHANNEL_URL);
+    const channelUrl = getState().sendbird.currentChannelUrl;
+
+    let channel;
+
+    if (channelUrl !== '') {
+      channel = await sb.feedChannel.getChannel(channelUrl);
+    } else {
+      const queryParams = {
+        includeEmpty: true,
+        limit: 1,
+      };
+
+      const channelQuery = sb.feedChannel.createMyFeedChannelListQuery(queryParams);
+      const channels = await channelQuery.next();
+
+      if (channels.length === 0) {
+        throw new Error('No feed channel found');
+      } else {
+        channel = channels[0];
+      }
+    }
 
     const filter = new MessageFilter();
     if (data?.selectedFilter) {
@@ -251,7 +274,8 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
       collection: collection,
     };
   } catch (error) {
-    console.log(error);
+    console.log('collectionInit Error', error);
+    throw error;
   }
 });
 
@@ -266,10 +290,23 @@ export const handleSignOut = createAsyncThunk('sendbird/handleSignOut', async da
       await sb.unregisterFCMPushTokenAllForCurrentUser();
     }
     await sb.disconnect();
-    AsyncStorage.removeItem('loginInformation');
+    AsyncStorage.mergeItem('loginInformation', JSON.stringify({isSignedIn: false}));
     return;
   } catch (error) {
-    console.log(error);
+    console.log('handleSignOut Error', error);
+    throw error;
+  }
+});
+
+export const markChannelAsRead = createAsyncThunk('sendbird/markChannelAsRead', async (data, {dispatch, getState}) => {
+  try {
+    const channel = getState().sendbird.feedChannel;
+
+    await channel.markAsRead();
+    return;
+  } catch (error) {
+    console.log('markChannelAsRead Error', error);
+    throw error;
   }
 });
 
@@ -280,7 +317,8 @@ export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', 
     // We don't actually need to return anything since updating will happen via the handlers
     return {};
   } catch (error) {
-    console.log(error);
+    console.log('refreshCollection Error', error);
+    throw error;
   }
 });
 
@@ -291,7 +329,8 @@ export const disposeCollection = createAsyncThunk('sendbird/disposeCollection', 
     dispatch(initCollection());
     return;
   } catch (error) {
-    console.log(error);
+    console.log('disposeCollection Error', error);
+    throw error;
   }
 });
 
@@ -310,7 +349,8 @@ export const loadNext = createAsyncThunk('sendbird/loadNext', async data => {
       abort();
     }
   } catch (error) {
-    console.log(error);
+    console.log('loadNext Error', error);
+    throw error;
   }
 });
 
@@ -329,6 +369,7 @@ export const loadPrev = createAsyncThunk('sendbird/loadPrev', async (data, {getS
       abort();
     }
   } catch (error) {
-    console.log(error);
+    console.log('loadPrev Error', error);
+    throw error;
   }
 });
