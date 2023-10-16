@@ -37,8 +37,12 @@ function App() {
       PushNotificationIOS.addEventListener('localNotification', onNotificationiOS);
       return PushNotificationIOS.removeEventListener('localNotification');
     } else {
-      const unsubscribe = notifee.onForegroundEvent(onNotificationAndroid);
-      return unsubscribe;
+      const unsubscribeForeground = notifee.onForegroundEvent(onNotificationAndroid);
+      const unsubscribeBackground = notifee.onBackgroundEvent(onNotificationAndroid);
+      return () => {
+        unsubscribeForeground();
+        unsubscribeBackground();
+      };
     }
   }, []);
 

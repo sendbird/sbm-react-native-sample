@@ -1,16 +1,18 @@
 import notifee, {EventType} from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
+import {AppState, PermissionsAndroid, Platform} from 'react-native';
 import {navigationRef} from '../../App';
-import {FEED_CHANNEL_URL} from '../constants';
 import {refreshCollection, updateHasNewNotifications} from '../redux/slices/sendbird';
 import {store} from '../redux/store';
-import {PermissionsAndroid, Platform} from 'react-native';
-import messaging from '@react-native-firebase/messaging';
 
 export const requestNotificationsPermission = async () => {
   switch (Platform.OS) {
     case 'ios': {
       const authStatus = await messaging().requestPermission();
-      return (authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL);
+      return (
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL
+      );
     }
     case 'android': {
       const authStatus = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -20,7 +22,7 @@ export const requestNotificationsPermission = async () => {
       return true;
     }
   }
-}
+};
 
 export const onRemoteMessage = async remoteMessage => {
   const currentScreen = navigationRef.current?.getCurrentRoute()?.name;
@@ -35,26 +37,29 @@ export const onRemoteMessage = async remoteMessage => {
   if (remoteMessage && remoteMessage.data) {
     let pushActionId = 'SendbirdNotification-';
     const sendbirdData = JSON.parse(remoteMessage.data.sendbird);
-
-    if (sendbirdData.channel.channel_url === FEED_CHANNEL_URL) {
-      pushActionId += sendbirdData.message_id;
-
-      if (currentScreen !== 'Notifications') {
-        await notifee.displayNotification({
-          title: 'Sendbird RN Sample',
-          body: remoteMessage.data.message,
-          android: {
-            channelId,
-            pressAction: {
-              id: pushActionId,
-              launchActivity: 'default',
-            },
-          },
-        });
+    const channelUrl = store.getState().sendbird.feedChannel._url;
+    if (
+      currentScreen === 'Notifications' &&
+      sendbirdData.channel.channel_url === channelUrl &&
+      AppState.currentState === 'active'
+    ) {
+      store.dispatch(updateHasNewNotifications(true));
+    } else {
+      console.log('there');
+      if (sendbirdData.channel.channel_url === channelUrl) {
         store.dispatch(refreshCollection());
-      } else {
-        store.dispatch(updateHasNewNotifications(true));
       }
+      await notifee.displayNotification({
+        title: 'Sendbird RN Sample',
+        body: remoteMessage.data.message,
+        android: {
+          channelId,
+          pressAction: {
+            id: pushActionId,
+            launchActivity: 'default',
+          },
+        },
+      });
     }
   }
 };
