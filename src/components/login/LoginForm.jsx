@@ -53,35 +53,58 @@ export default function LoginForm() {
             ...state,
             isLoading: false,
           });
+          navigation.navigate('Home');
+        })
+        .catch(error => {
+          setState({
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorMessage: error.message,
+          });
+        });
+    }
+  }, [state.isSignedIn]);
+
+  const handleTextChange = (element, text) => {
+    setState({
+      ...state,
+      [element]: text,
+    });
+  };
+
+  const handleLogin = async () => {
+    try {
+      setState({
+        ...state,
+        isLoading: true,
+      });
+      dispatch(initSendbird(state))
+        .unwrap()
+        .then(() => {
+          setState({
+            ...state,
+            isLoading: false,
+          });
+        })
+        .catch(error => {
+          setState({
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorMessage: error.message,
+          });
         });
     } catch (error) {
       setState({
         ...state,
         isLoading: false,
+        hasError: true,
+        errorMessage: error.message,
       });
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    AsyncStorage.getItem('loginInformation').then(data => {
-      if (data) {
-        setState({
-          ...state,
-          isLoading: true,
-        });
-        dispatch(initSendbird(JSON.parse(data)))
-          .unwrap()
-          .then(() => {
-            setState({
-              ...state,
-              isLoading: false,
-            });
-            navigation.navigate('Home');
-          });
-      }
-    });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -106,13 +129,31 @@ export default function LoginForm() {
         autoCapitalize="none"
         value={state.token}
         onChangeText={text => handleTextChange('token', text)}
-        placeholder="Token (Optional)"
+        placeholder="Session/Access Token"
+        placeholderTextColor="#00000050"
+      />
+      <TextInput
+        style={styles.textInput}
+        autoCapitalize="none"
+        value={state.channelUrl}
+        onChangeText={text => handleTextChange('channelUrl', text)}
+        placeholder="Channel URL (Optional)"
         placeholderTextColor="#00000050"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        {state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Sign In</Text>}
+        {state.isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Text style={styles.buttonText}>Sign In</Text>
+        )}
       </TouchableOpacity>
+
+      {state.hasError && (
+        <View style={styles.error}>
+          <Text style={styles.errorText}>{state.errorMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -143,5 +184,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     lineHeight: 24,
+  },
+  error: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    width: '100%',
+    flexDirection: 'row',
+  },
+  errorText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#ff0000',
+    lineHeight: 24,
+    marginLeft: 10,
   },
 });

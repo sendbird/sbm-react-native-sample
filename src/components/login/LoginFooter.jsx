@@ -1,9 +1,16 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
+const lockJson = require('../../../package-lock.json');
 
 export default function LoginFooter() {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require('../../assets/sendbird_logo.png')} />
+      <Text style={styles.versionText}>
+        SDK v{lockJson.packages['node_modules/@sendbird/chat']['version']}
+      </Text>
+      <Image
+        style={styles.image}
+        source={require('../../assets/sendbird_logo.png')}
+      />
     </View>
   );
 }
@@ -11,6 +18,7 @@ export default function LoginFooter() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
+    flex: 1,
     bottom: 0,
     alignItems: 'center',
     width: '100%',
@@ -19,5 +27,11 @@ const styles = StyleSheet.create({
   image: {
     height: 16,
     width: 94,
+  },
+  versionText: {
+    fontSize: 12,
+    paddingBottom: 16,
+    fontWeight: '400',
+    color: '#00000080',
   },
 });

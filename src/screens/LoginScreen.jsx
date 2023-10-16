@@ -11,6 +11,8 @@ export default function LoginScreen() {
       <View style={styles.container}>
         <LoginHeader />
         <LoginForm />
+      </View>
+      <View style={styles.footerContainer}>
         <LoginFooter />
       </View>
     </SafeAreaView>
@@ -25,5 +27,8 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     padding: 24,
+  },
+  footerContainer: {
+    width: '100%',
   },
 });

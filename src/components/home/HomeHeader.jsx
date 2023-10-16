@@ -6,7 +6,7 @@ export default function HomeHeader() {
   return (
     <View style={styles.container(selectedTheme)}>
       <Text style={styles.headerText(selectedTheme)}>Home</Text>
-      <Text style={styles.secondaryHeaderText(selectedTheme)}>Connected (API)</Text>
+      <Text style={styles.secondaryHeaderText(selectedTheme)}>Authenticated (API)</Text>
     </View>
   );
 }

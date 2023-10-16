@@ -1,16 +1,33 @@
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import ChevronRight from '../../assets/chevron-right.svg';
 import {COLORS} from '../../constants';
-import {handleSignOut} from '../../redux/slices/sendbird';
+import {handleSignOut, initCollection} from '../../redux/slices/sendbird';
 
 export default function HomeContent() {
+  const [state, setState] = useState({
+    hasError: false,
+    errorMessage: '',
+  });
   const unreadCount = useSelector(state => state.sendbird.unreadCount);
   const navigation = useNavigation();
   const selectedTheme = useColorScheme();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Since we're not using Websockets, we can immediately fetch the collection
+    dispatch(initCollection())
+      .unwrap()
+      .catch(error => {
+        setState({
+          hasError: true,
+          errorMessage: error.message,
+        });
+      });
+  }, []);
 
   const handleSignOutButton = () => {
     dispatch(handleSignOut());
@@ -21,7 +38,7 @@ export default function HomeContent() {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.innerContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')} disabled={state.hasError}>
           <View style={styles.feedBtnContainer}>
             <Text style={styles.feedBtnText}>Feed Channel</Text>
             <View style={{marginLeft: 'auto', flexDirection: 'row'}}>
@@ -34,6 +51,11 @@ export default function HomeContent() {
             </View>
           </View>
         </TouchableOpacity>
+        {state.hasError && (
+          <View style={styles.error}>
+            <Text style={styles.errorText}>{state.errorMessage}</Text>
+          </View>
+        )}
         <TouchableOpacity style={styles.signOutBtn(selectedTheme)} onPress={handleSignOutButton}>
           <Text style={styles.signOutBtnText(selectedTheme)}>Sign Out</Text>
         </TouchableOpacity>
@@ -105,4 +127,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 24,
   }),
+  error: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    width: '100%',
+    flexDirection: 'row',
+  },
+  errorText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#ff0000',
+    lineHeight: 24,
+    marginLeft: 10,
+  },
 });
