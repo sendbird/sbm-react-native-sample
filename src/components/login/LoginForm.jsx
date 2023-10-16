@@ -1,31 +1,47 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {initSendbird} from '../../redux/slices/sendbird';
 
-import {APP_ID, COLORS, TOKEN, USER_ID} from '../../constants';
+import {COLORS} from '../../constants';
 
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [state, setState] = useState({
-    appId: APP_ID,
-    userId: USER_ID,
-    token: TOKEN,
+    appId: '',
+    userId: '',
+    token: '',
+    channelUrl: '',
     isLoading: false,
+    hasError: false,
+    errorMessage: '',
   });
 
-  const handleTextChange = (element, text) => {
-    setState({
-      ...state,
-      [element]: text,
+  useEffect(() => {
+    AsyncStorage.getItem('loginInformation').then(data => {
+      data = JSON.parse(data);
+      setState({
+        appId: data?.appId || '',
+        userId: data?.userId || '',
+        token: data?.token || '',
+        channelUrl: data?.channelUrl || '',
+        isSignedIn: data?.isSignedIn || false,
+      });
     });
-  };
+  }, []);
 
-  const handleLogin = async () => {
-    try {
+  useEffect(() => {
+    if (state.isSignedIn) {
       setState({
         ...state,
         isLoading: true,
