@@ -1,8 +1,9 @@
-import {StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useCallback} from 'react';
+import {StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLORS} from '../../../constants';
 import {parseThemeColor} from '../../../utils';
+import NotificationButton from './common/NotificationButton';
 
 // Text only with 2 buttons
 
@@ -43,20 +44,12 @@ export default function Template02({variables}) {
         <Text style={styles.bodyText(selectedTheme)}>{variables.content}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => handleButtonClick('left')}
-          style={styles.leftButton(globalSettings.components.textButton, selectedTheme)}>
-          <Text style={styles.buttonText(globalSettings.components.textButton, selectedTheme)}>
-            {variables.left_button_text}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        <NotificationButton onPress={() => handleButtonClick('left')} text={variables.left_button_text} />
+        <NotificationButton
           onPress={() => handleButtonClick('right')}
-          style={styles.rightButton(globalSettings.components.textButton, selectedTheme)}>
-          <Text style={styles.buttonText(globalSettings.components.textButton, selectedTheme)}>
-            {variables.right_button_text}
-          </Text>
-        </TouchableOpacity>
+          text={variables.right_button_text}
+          style={styles.rightButton}
+        />
       </View>
     </View>
   );
@@ -88,27 +81,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
   },
-  leftButton: (theme, selectedTheme) => ({
-    height: 48,
-    flex: 1,
-    backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
-    borderRadius: theme.radius,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  rightButton: (theme, selectedTheme) => ({
-    height: 48,
-    flex: 1,
+  rightButton: {
     marginLeft: 8,
-    backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
-    borderRadius: theme.radius,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  buttonText: (theme, selectedTheme) => ({
-    color: parseThemeColor(theme.textColor, selectedTheme),
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 16,
-  }),
+  },
 });
