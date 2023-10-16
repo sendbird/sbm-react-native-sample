@@ -25,9 +25,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'rn_notifications' do
+target 'notifications' do
   config = use_native_modules!
-
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
@@ -50,7 +49,7 @@ target 'rn_notifications' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'rn_notificationsTests' do
+  target 'notificationsTests' do
     inherit! :complete
     # Pods for testing
   end
