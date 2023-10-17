@@ -119,7 +119,7 @@ async function registerCollectionHandlers(dispatch, collection) {
   collection.setMessageCollectionHandler(handler);
 }
 
-async function issueSessionToken(userId) {
+async function issueSessionToken(userId, appId) {
   // This is just a simple lambda function that generates a token for the user
   // This should be a more secure URL in your backend service
   const response = await fetch('https://7kqiu6yti6627q27743ymy5wam0nmdti.lambda-url.us-east-1.on.aws/', {
@@ -129,6 +129,7 @@ async function issueSessionToken(userId) {
     },
     body: JSON.stringify({
       user_id: userId,
+      app_id: appId,
     }),
   });
 
@@ -148,7 +149,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     sb.setSessionHandler(
       new SessionHandler({
         onSessionTokenRequired: (resolve, reject) => {
-          issueSessionToken(data.userId)
+          issueSessionToken(data.userId, data.appId)
             .then(token => resolve(token))
             .catch(err => reject(err));
         },
