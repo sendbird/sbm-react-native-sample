@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import {StyleSheet, Text, View, useColorScheme} from 'react-native';
+import {Linking, StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLORS} from '../../../constants';
 import {parseThemeColor} from '../../../utils';
