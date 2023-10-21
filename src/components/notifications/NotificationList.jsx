@@ -32,7 +32,12 @@ export default function NotificationList() {
   );
 
   const NewNotifications = () => (
-    <TouchableOpacity style={styles.newNotificationsContainer} onPress={() => dispatch(refreshCollection())}>
+    <TouchableOpacity
+      style={styles.newNotificationsContainer}
+      onPress={() => {
+        dispatch(refreshCollection());
+        dispatch(markChannelAsRead());
+      }}>
       <Text style={styles.newNotificationsText}>New Notifications</Text>
     </TouchableOpacity>
   );
