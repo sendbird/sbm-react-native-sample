@@ -1,14 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {initSendbird} from '../../redux/slices/sendbird';
 
@@ -142,11 +135,7 @@ export default function LoginForm() {
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        {state.isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          <Text style={styles.buttonText}>Sign In</Text>
-        )}
+        {state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Sign In</Text>}
       </TouchableOpacity>
 
       {state.hasError && (
