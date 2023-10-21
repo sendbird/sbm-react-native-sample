@@ -5,7 +5,7 @@ import SendbirdChat, {CollectionEventSource, SessionHandler} from '@sendbird/cha
 import {FeedChannelModule} from '@sendbird/chat/feedChannel';
 import {MessageCollectionInitPolicy, MessageFilter} from '@sendbird/chat/groupChannel';
 import {Platform} from 'react-native';
-import {requestNotificationsPermission} from '../../utils';
+import {checkNotifications} from 'react-native-permissions';
 
 export let sb;
 
@@ -192,8 +192,8 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     const globalSettings = JSON.parse((await sb.feedChannel.getGlobalNotificationChannelSetting()).jsonString);
 
     // Request permission for push notifications
-    const granted = await requestNotificationsPermission();
-    if (granted) {
+    const {status} = await checkNotifications();
+    if (status === 'granted') {
       // Register push if permission is granted
       if (Platform.OS === 'ios') {
         const token = await messaging().getAPNSToken();

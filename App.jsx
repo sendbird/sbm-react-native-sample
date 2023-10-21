@@ -1,16 +1,14 @@
-import notifee from '@notifee/react-native';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {NavigationContainer, createNavigationContainerRef} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useCallback, useEffect} from 'react';
-import {AppState, Platform} from 'react-native';
+import {AppState} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {refreshCollection, sb} from './src/redux/slices/sendbird';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import NotificationsScreen from './src/screens/NotificationsScreen';
-import {onNotificationAndroid, onNotificationiOS} from './src/utils';
+import {notificationHandler, requestPermissions} from './src/utils';
 
 const Stack = createNativeStackNavigator();
 export const navigationRef = createNavigationContainerRef();
@@ -22,28 +20,27 @@ function App() {
   // Refresh collection when app comes back into foreground
   const handleAppStateChange = useCallback(nextAppState => {
     if (nextAppState === 'active' && !!sb?.currentUser) {
+      sb.setForegroundState();
       dispatch(refreshCollection());
+    } else if (nextAppState === 'background') {
+      sb.setBackgroundState();
     }
+  }, []);
+
+  useEffect(() => {
+    let unsubscribe = () => {};
+    requestPermissions().then(permissionGranted => {
+      if (permissionGranted) {
+        // notificationHandler.startOnAppOpened();
+        unsubscribe = notificationHandler.startOnForeground();
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
-  }, []);
-
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      PushNotificationIOS.getInitialNotification().then(onNotificationiOS);
-      PushNotificationIOS.addEventListener('localNotification', onNotificationiOS);
-      return PushNotificationIOS.removeEventListener('localNotification');
-    } else {
-      const unsubscribeForeground = notifee.onForegroundEvent(onNotificationAndroid);
-      const unsubscribeBackground = notifee.onBackgroundEvent(onNotificationAndroid);
-      return () => {
-        unsubscribeForeground();
-        unsubscribeBackground();
-      };
-    }
   }, []);
 
   useEffect(() => {
