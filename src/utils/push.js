@@ -40,6 +40,7 @@ class NotificationHandler {
         }
       });
       unsubscribes.push(
+        // Specifies the action to take when the user presses the notification in the foreground.
         notifee.onForegroundEvent(async ({type, detail}) => {
           if (type === EventType.PRESS && detail.notification && isSendbirdNotification(detail.notification.data)) {
             const payload = parseSendbirdNotification(detail.notification.data);
@@ -63,7 +64,7 @@ class NotificationHandler {
             dispatch(refreshCollection());
             this.displayNotification(notification, sendbird);
           }
-
+          // Specifies the action to take when the user presses the notification in the foreground.
           if (data.userInteraction === 1) {
           }
         }
@@ -78,6 +79,7 @@ class NotificationHandler {
 
   startOnBackground() {
     if (Platform.OS === 'android') {
+      // Specifies the action to take when the user presses the notification in the background.
       notifee.onBackgroundEvent(async ({type, detail}) => {
         if (type === EventType.PRESS && detail.notification && isSendbirdNotification(detail.notification.data)) {
           console.log('Pressed Notification in Background');
