@@ -147,6 +147,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     sb = SendbirdChat.init({
       appId: data.appId,
       modules: [new FeedChannelModule()],
+      newInstance: sb?.appId !== data.appId,
     });
 
     // Register sessionHandlers to handle session token refresh and session closure
