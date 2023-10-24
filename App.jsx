@@ -23,7 +23,7 @@ function App() {
       sb.setForegroundState();
       dispatch(refreshCollection());
     } else if (nextAppState === 'background') {
-      sb.setBackgroundState();
+      sb?.setBackgroundState();
     }
   }, []);
 

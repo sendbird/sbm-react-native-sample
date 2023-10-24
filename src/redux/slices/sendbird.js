@@ -104,7 +104,6 @@ async function registerCollectionHandlers(dispatch, collection) {
     // Notifications cannot currently be deleted (WIP)
     onMessagesDeleted: (context, channel, messages) => {},
     onChannelUpdated: (context, channel) => {
-      console.log(channel, context);
       if (
         [CollectionEventSource.EVENT_CHANNEL_READ, CollectionEventSource.SYNC_CHANNEL_CHANGELOGS].includes(
           context.source,
