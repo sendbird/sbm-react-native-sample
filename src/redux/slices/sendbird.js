@@ -174,11 +174,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     );
 
     // Log in using only the API, not with Websocket to prevent unwanted MAU increases.
-    try {
-      await sb.authenticateFeed(data.userId, data.token);
-    } catch (error) {
-      throw error;
-    }
+    await sb.authenticateFeed(data.userId, data.token);
 
     // Storing the login information in AsyncStorage for later use
     await AsyncStorage.setItem(
