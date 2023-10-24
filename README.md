@@ -33,21 +33,10 @@ Step 1: Install dependencies
 npm install
 ```
 
-Step 2: Fill in the necessary information in the following in formation in `src/constants/sendbird.js`
+Step 2 (iOS Only): Pod install
 
 ```
-const APP_ID = '' // Sendbird application ID
-const USER_ID = '' // Desired Sendbird sser
-const TOKEN = '' // SessionToken for desired user
-const FEED_CHANNEL_URL = '' // The channel URL of the feed channel
-```
-
-Step 3 (iOS Only): Pod install
-
-```
-cd ios
-pod install
-pod update
+npx pod-install ios
 ```
 
 ## Usage
