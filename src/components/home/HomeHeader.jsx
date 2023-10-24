@@ -4,7 +4,7 @@ import {COLORS} from '../../constants';
 export default function HomeHeader() {
   const selectedTheme = useColorScheme();
   return (
-    <View style={styles.container(selectedTheme)}>
+    <View style={styles.container}>
       <Text style={styles.headerText(selectedTheme)}>Home</Text>
       <Text style={styles.secondaryHeaderText(selectedTheme)}>Authenticated (API)</Text>
     </View>
@@ -12,11 +12,11 @@ export default function HomeHeader() {
 }
 
 const styles = StyleSheet.create({
-  container: selectedTheme => ({
+  container: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: COLORS[selectedTheme].background,
-  }),
+    backgroundColor: '#EEEEEE',
+  },
   headerText: selectedTheme => ({
     fontSize: 24,
     fontWeight: '700',

@@ -84,7 +84,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     borderRadius: 8,
-    backgroundColor: COLORS.gray,
+    shadowOffset: {width: 0, height: 4},
+    shadowRadius: 12,
+    shadowColor: '#000000',
+    shadowOpacity: 0.12,
+    backgroundColor: '#FFFFFF',
   },
   feedBtnText: {
     fontSize: 20,
