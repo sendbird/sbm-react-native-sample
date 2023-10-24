@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View, useColorScheme} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import LogoFooter from '../components/common/LogoFooter';
 import HomeContent from '../components/home/HomeContent';
 import HomeHeader from '../components/home/HomeHeader';

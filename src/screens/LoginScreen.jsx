@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View, useColorScheme} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import LogoFooter from '../components/common/LogoFooter';
 import LoginForm from '../components/login/LoginForm';
 import LoginHeader from '../components/login/LoginHeader';

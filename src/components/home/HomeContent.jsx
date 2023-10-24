@@ -1,9 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import ChevronRight from '../../assets/chevron-right.svg';
-import {COLORS} from '../../constants';
 import {handleSignOut, initCollection} from '../../redux/slices/sendbird';
 
 export default function HomeContent() {
@@ -13,7 +12,6 @@ export default function HomeContent() {
   });
   const unreadCount = useSelector(state => state.sendbird.unreadCount);
   const navigation = useNavigation();
-  const selectedTheme = useColorScheme();
 
   const dispatch = useDispatch();
 
@@ -56,8 +54,8 @@ export default function HomeContent() {
             <Text style={styles.errorText}>{state.errorMessage}</Text>
           </View>
         )}
-        <TouchableOpacity style={styles.signOutBtn(selectedTheme)} onPress={handleSignOutButton}>
-          <Text style={styles.signOutBtnText(selectedTheme)}>Sign Out</Text>
+        <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOutButton}>
+          <Text style={styles.signOutBtnText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -115,22 +113,22 @@ const styles = StyleSheet.create({
     marginRight: 16,
     color: '#000',
   },
-  signOutBtn: selectedTheme => ({
+  signOutBtn: {
     marginTop: 32,
     width: '100%',
     height: 48,
     borderWidth: 1,
     borderRadius: 4,
-    borderColor: COLORS[selectedTheme].border,
+    borderColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
-  }),
-  signOutBtnText: selectedTheme => ({
-    color: COLORS[selectedTheme].text,
+  },
+  signOutBtnText: {
+    color: '#000000',
     fontWeight: '600',
     fontSize: 20,
     lineHeight: 24,
-  }),
+  },
   error: {
     alignItems: 'center',
     justifyContent: 'center',
