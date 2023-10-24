@@ -22,7 +22,6 @@ export default function NotificationButton({onPress, style, text}) {
 
 const styles = StyleSheet.create({
   wrapper: (theme, selectedTheme) => ({
-    height: 48,
     flex: 1,
     backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
     borderRadius: theme.radius,
