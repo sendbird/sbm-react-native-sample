@@ -46,7 +46,6 @@ export default function LoginForm() {
             ...state,
             isLoading: false,
           });
-          navigation.navigate('Home');
         })
         .catch(error => {
           setState({
