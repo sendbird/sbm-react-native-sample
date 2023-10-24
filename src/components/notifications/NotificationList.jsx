@@ -38,7 +38,9 @@ export default function NotificationList() {
         dispatch(refreshCollection());
         dispatch(markChannelAsRead());
       }}>
-      <Text style={styles.newNotificationsText}>New Notifications</Text>
+      <Text style={styles.newNotificationsText} allowFontScaling={false}>
+        New Notifications
+      </Text>
     </TouchableOpacity>
   );
 
@@ -162,5 +164,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.1,
+    alignSelf: 'center',
   },
 });
