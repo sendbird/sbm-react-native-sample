@@ -1,12 +1,19 @@
 # Resolve react_native_pods.rb with node to allow for hoisting
-require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
+setup_permissions(['Notifications'])
 
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
 # because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
@@ -25,9 +32,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'rn_notifications' do
+target 'notifications' do
   config = use_native_modules!
-
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
@@ -50,7 +56,7 @@ target 'rn_notifications' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'rn_notificationsTests' do
+  target 'notificationsTests' do
     inherit! :complete
     # Pods for testing
   end

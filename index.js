@@ -2,19 +2,19 @@
  * @format
  */
 
-import messaging from '@react-native-firebase/messaging';
-import {AppRegistry, Platform} from 'react-native';
+import {AppRegistry, Platform, UIManager} from 'react-native';
 import {Provider as ReduxProvider} from 'react-redux';
 
 import App from './App';
 import {name as appName} from './app.json';
 import {store} from './src/redux/store';
-import {onRemoteMessage} from './src/utils';
+import {notificationHandler} from './src/utils';
 
-if (Platform.OS !== 'ios') {
-  messaging().setBackgroundMessageHandler(onRemoteMessage);
-  messaging().onMessage(onRemoteMessage);
+if (Platform.OS === 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
 }
+
+notificationHandler.startOnBackground();
 
 const ReduxApp = () => (
   <ReduxProvider store={store}>

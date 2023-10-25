@@ -1,33 +1,31 @@
-import {StyleSheet, Text, View, useColorScheme} from 'react-native';
-import {COLORS} from '../../constants';
+import {StyleSheet, Text, View} from 'react-native';
 
 export default function HomeHeader() {
-  const selectedTheme = useColorScheme();
   return (
-    <View style={styles.container(selectedTheme)}>
-      <Text style={styles.headerText(selectedTheme)}>Home</Text>
-      <Text style={styles.secondaryHeaderText(selectedTheme)}>Connected (API)</Text>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Home</Text>
+      <Text style={styles.secondaryHeaderText}>Authenticated (API)</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: selectedTheme => ({
+  container: {
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: COLORS[selectedTheme].background,
-  }),
-  headerText: selectedTheme => ({
+    backgroundColor: '#EEEEEE',
+  },
+  headerText: {
     fontSize: 24,
     fontWeight: '700',
-    color: COLORS[selectedTheme].text,
-  }),
-  secondaryHeaderText: selectedTheme => ({
+    color: '#000000',
+  },
+  secondaryHeaderText: {
     marginLeft: 'auto',
     fontSize: 16,
     fontWeight: '400',
-    color: COLORS[selectedTheme].text,
+    color: '#000000',
     opacity: 0.5,
     marginTop: 8,
-  }),
+  },
 });

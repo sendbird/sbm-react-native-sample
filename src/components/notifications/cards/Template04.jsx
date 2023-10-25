@@ -41,30 +41,4 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: COLORS[selectedTheme].text,
   }),
-  buttonContainer: {
-    flexDirection: 'row',
-  },
-  leftButton: (theme, selectedTheme) => ({
-    height: 48,
-    flex: 1,
-    backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
-    borderRadius: theme.radius,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  rightButton: (theme, selectedTheme) => ({
-    height: 48,
-    flex: 1,
-    marginLeft: 8,
-    backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
-    borderRadius: theme.radius,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  buttonText: (theme, selectedTheme) => ({
-    color: parseThemeColor(theme.textColor, selectedTheme),
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 16,
-  }),
 });

@@ -1,15 +1,14 @@
-import {useNavigation} from '@react-navigation/native';
 import {useCallback} from 'react';
-import {Linking, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
+import {Linking, StyleSheet, Text, View, useColorScheme} from 'react-native';
 import {useSelector} from 'react-redux';
 import {COLORS} from '../../../constants';
 import {parseThemeColor} from '../../../utils';
+import NotificationButton from './common/NotificationButton';
 
 // Text only with one button
 
 export default function Template01({variables}) {
   const selectedTheme = useColorScheme();
-  const navigation = useNavigation();
   const globalSettings = useSelector(state => state.sendbird.globalSettings.themes[0]);
 
   const handleButtonClick = useCallback(async () => {
@@ -42,13 +41,7 @@ export default function Template01({variables}) {
         <Text style={styles.bodyText(selectedTheme)}>{variables.content}</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          style={styles.button(globalSettings.components.textButton, selectedTheme)}>
-          <Text style={styles.buttonText(globalSettings.components.textButton, selectedTheme)}>
-            {variables.button_text}
-          </Text>
-        </TouchableOpacity>
+        <NotificationButton onPress={handleButtonClick} text={variables.button_text} />
       </View>
     </View>
   );
@@ -81,18 +74,4 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  button: (theme, selectedTheme) => ({
-    width: '100%',
-    height: 48,
-    backgroundColor: parseThemeColor(theme.backgroundColor, selectedTheme),
-    borderRadius: theme.radius,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  buttonText: (theme, selectedTheme) => ({
-    color: parseThemeColor(theme.textColor, selectedTheme),
-    fontSize: 14,
-    fontWeight: '700',
-    lineHeight: 16,
-  }),
 });

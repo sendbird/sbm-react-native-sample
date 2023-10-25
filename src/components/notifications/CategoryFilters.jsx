@@ -16,6 +16,7 @@ export default function CategoryFilters() {
       <View style={styles.filterContainer}>
         <FlatList
           data={categories}
+          showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
             <TouchableOpacity
               style={styles.filter(activeFilter, item.customType, categorySettings, selectedTheme)}
@@ -28,7 +29,7 @@ export default function CategoryFilters() {
             </TouchableOpacity>
           )}
           keyExtractor={item => item.customType}
-          contentContainerStyle={{columnGap: 8}}
+          contentContainerStyle={{columnGap: 8, paddingHorizontal: 16}}
           horizontal
         />
       </View>
@@ -39,7 +40,7 @@ export default function CategoryFilters() {
 const styles = StyleSheet.create({
   filterContainer: {
     width: '100%',
-    padding: 16,
+    paddingVertical: 16,
   },
   filter: (activeFilter, item, theme, selectedTheme) => ({
     paddingVertical: 6,

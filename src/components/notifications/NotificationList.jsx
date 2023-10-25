@@ -1,22 +1,26 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import NotificationBell from '../../assets/notification-bell.svg';
-import {loadPrev, refreshCollection} from '../../redux/slices/sendbird';
+import {loadPrev, markChannelAsRead, refreshCollection} from '../../redux/slices/sendbird';
 import {parseThemeColor} from '../../utils';
 import CategoryFilters from './CategoryFilters';
 import Notification from './Notification';
 
 export default function NotificationList() {
   const [refreshing, setRefreshing] = useState(false);
-  const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
   const dispatch = useDispatch();
+  const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
   const selectedTheme = useColorScheme();
   const isNotificationsLoading = useSelector(state => state.sendbird.isNotificationsLoading);
   const isChannelLoading = useSelector(state => state.sendbird.isChannelLoading);
   const listSettings = useSelector(state => state.sendbird.globalSettings.themes[0].list);
   const isCategoryFilterEnabled = useSelector(state => state.sendbird.feedChannel.isCategoryFilterEnabled);
   const notifications = useSelector(state => state.sendbird.notifications);
+
+  useEffect(() => {
+    dispatch(markChannelAsRead());
+  }, []);
 
   const NoNotifications = () => (
     <View style={styles.listEmpty}>
@@ -28,8 +32,15 @@ export default function NotificationList() {
   );
 
   const NewNotifications = () => (
-    <TouchableOpacity style={styles.newNotificationsContainer} onPress={() => dispatch(refreshCollection())}>
-      <Text style={styles.newNotificationsText}>New Notifications</Text>
+    <TouchableOpacity
+      style={styles.newNotificationsContainer}
+      onPress={() => {
+        dispatch(refreshCollection());
+        dispatch(markChannelAsRead());
+      }}>
+      <Text style={styles.newNotificationsText} allowFontScaling={false}>
+        New Notifications
+      </Text>
     </TouchableOpacity>
   );
 
@@ -70,7 +81,7 @@ export default function NotificationList() {
           <FlatList
             contentContainerStyle={{paddingBottom: 40}}
             data={notifications}
-            keyExtractor={item => item.messageId}
+            keyExtractor={item => item.notificationId}
             ListEmptyComponent={<NoNotifications />}
             onEndReached={() => {
               if (!this.onEndReachedCalledDuringMomentum) {
@@ -153,5 +164,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     letterSpacing: 0.1,
+    alignSelf: 'center',
   },
 });

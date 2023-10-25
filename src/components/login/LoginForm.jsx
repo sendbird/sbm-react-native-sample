@@ -5,17 +5,58 @@ import {ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View} 
 import {useDispatch} from 'react-redux';
 import {initSendbird} from '../../redux/slices/sendbird';
 
-import {APP_ID, COLORS, TOKEN, USER_ID} from '../../constants';
+import {COLORS} from '../../constants';
 
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [state, setState] = useState({
-    appId: APP_ID,
-    userId: USER_ID,
-    token: TOKEN,
+    appId: '',
+    userId: '',
+    token: '',
+    channelUrl: '',
     isLoading: false,
+    hasError: false,
+    errorMessage: '',
   });
+
+  useEffect(() => {
+    AsyncStorage.getItem('loginInformation').then(data => {
+      data = JSON.parse(data);
+      setState({
+        appId: data?.appId || '',
+        userId: data?.userId || '',
+        token: data?.token || '',
+        channelUrl: data?.channelUrl || '',
+        isSignedIn: data?.isSignedIn || false,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (state.isSignedIn) {
+      setState({
+        ...state,
+        isLoading: true,
+      });
+      dispatch(initSendbird(state))
+        .unwrap()
+        .then(() => {
+          setState({
+            ...state,
+            isLoading: false,
+          });
+        })
+        .catch(error => {
+          setState({
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorMessage: error.message,
+          });
+        });
+    }
+  }, [state.isSignedIn]);
 
   const handleTextChange = (element, text) => {
     setState({
@@ -37,35 +78,25 @@ export default function LoginForm() {
             ...state,
             isLoading: false,
           });
+        })
+        .catch(error => {
+          setState({
+            ...state,
+            isLoading: false,
+            hasError: true,
+            errorMessage: error.message,
+          });
         });
     } catch (error) {
       setState({
         ...state,
         isLoading: false,
+        hasError: true,
+        errorMessage: error.message,
       });
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    AsyncStorage.getItem('loginInformation').then(data => {
-      if (data) {
-        setState({
-          ...state,
-          isLoading: true,
-        });
-        dispatch(initSendbird(JSON.parse(data)))
-          .unwrap()
-          .then(() => {
-            setState({
-              ...state,
-              isLoading: false,
-            });
-            navigation.navigate('Home');
-          });
-      }
-    });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -90,13 +121,27 @@ export default function LoginForm() {
         autoCapitalize="none"
         value={state.token}
         onChangeText={text => handleTextChange('token', text)}
-        placeholder="Token (Optional)"
+        placeholder="Session/Access Token"
+        placeholderTextColor="#00000050"
+      />
+      <TextInput
+        style={styles.textInput}
+        autoCapitalize="none"
+        value={state.channelUrl}
+        onChangeText={text => handleTextChange('channelUrl', text)}
+        placeholder="Channel URL (Optional)"
         placeholderTextColor="#00000050"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         {state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Sign In</Text>}
       </TouchableOpacity>
+
+      {state.hasError && (
+        <View style={styles.error}>
+          <Text style={styles.errorText}>{state.errorMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -127,5 +172,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     lineHeight: 24,
+  },
+  error: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    width: '100%',
+    flexDirection: 'row',
+  },
+  errorText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#ff0000',
+    lineHeight: 24,
+    marginLeft: 10,
   },
 });
