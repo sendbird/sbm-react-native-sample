@@ -4,6 +4,7 @@ import Template01 from './cards/Template01';
 import Template02 from './cards/Template02';
 import Template03 from './cards/Template03';
 import Template04 from './cards/Template04';
+import TemplateUnknown from './cards/TemplateUnknown';
 
 export default function Notification({notification}) {
   const notificationData = notification.notificationData;
@@ -24,6 +25,8 @@ export default function Notification({notification}) {
     if (notificationData.templateKey === 'template-04') {
       return <Template04 variables={templateVariables} />;
     }
+
+    return <TemplateUnknown />;
   };
 
   return (
