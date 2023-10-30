@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import NotificationBell from '../../assets/notification-bell.svg';
@@ -9,6 +9,7 @@ import Notification from './Notification';
 
 export default function NotificationList() {
   const [refreshing, setRefreshing] = useState(false);
+  const flatListRef = useRef();
   const dispatch = useDispatch();
   const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
   const selectedTheme = useColorScheme();
@@ -35,7 +36,11 @@ export default function NotificationList() {
     <TouchableOpacity
       style={styles.newNotificationsContainer}
       onPress={() => {
-        dispatch(refreshCollection());
+        dispatch(refreshCollection())
+          .unwrap()
+          .then(() => {
+            flatListRef.current.scrollToOffset({animated: true, offset: 0});
+          });
         dispatch(markChannelAsRead());
       }}>
       <Text style={styles.newNotificationsText} allowFontScaling={false}>
@@ -79,6 +84,7 @@ export default function NotificationList() {
       ) : (
         <View style={styles.listPadding} id="notification-list-pad">
           <FlatList
+            ref={flatListRef}
             contentContainerStyle={{paddingBottom: 40}}
             data={notifications}
             keyExtractor={item => item.notificationId}

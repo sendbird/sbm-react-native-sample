@@ -1,3 +1,4 @@
+import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
@@ -305,6 +306,7 @@ export const markChannelAsRead = createAsyncThunk('sendbird/markChannelAsRead', 
     const channel = getState().sendbird.feedChannel;
 
     await channel.markAsRead();
+    await notifee.setBadgeCount(0);
     return;
   } catch (error) {
     console.log('markChannelAsRead Error', error);
