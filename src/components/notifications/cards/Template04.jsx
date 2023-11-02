@@ -5,9 +5,10 @@ import {parseThemeColor} from '../../../utils';
 
 // Text only no buttons
 
-export default function Template04({variables}) {
+export default function Template04({notification}) {
   const selectedTheme = useColorScheme();
   const globalSettings = useSelector(state => state.sendbird.globalSettings.themes[0]);
+  const variables = notification.notificationData.templateVariables;
 
   return (
     <View style={styles.wrapper(globalSettings.notification, selectedTheme)}>
