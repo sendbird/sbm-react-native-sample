@@ -19,7 +19,7 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@reduxjs/toolkit": "^1.9.5",
-    "@sendbird/chat": "^4.10.1",
+    "@sendbird/chat": "^4.10.4",
     "@sendbird/uikit-utils": "^3.1.2",
     "date-fns": "^2.30.0",
     "react": "18.2.0",
