@@ -328,6 +328,17 @@ export const markButtonAsClicked = createAsyncThunk(
   },
 );
 
+export const logImpression = createAsyncThunk('sendbird/logImpression', async (data, {dispatch, getState}) => {
+  try {
+    const channel = getState().sendbird.feedChannel;
+    await channel.logImpression(data);
+    return;
+  } catch (error) {
+    console.log('logImpression Error', error);
+    throw error;
+  }
+});
+
 export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', async data => {
   try {
     // Refreshes the collection. Channel + Notifications
