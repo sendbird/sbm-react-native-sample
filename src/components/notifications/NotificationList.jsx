@@ -9,7 +9,7 @@ import Notification from './Notification';
 
 export default function NotificationList() {
   const [refreshing, setRefreshing] = useState(false);
-  const [seenNotifications, setSeenNotifications] = useState([]);
+  const seenNotifications = useRef({}).current;
   const flatListRef = useRef();
   const dispatch = useDispatch();
   const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
@@ -67,18 +67,13 @@ export default function NotificationList() {
     const impressions = [];
     const visibleNotifications = viewableItems.filter(it => it.isViewable).map(({item}) => item);
 
-    setSeenNotifications(prevState => {
-      visibleNotifications.forEach(visible => {
-        const exists = prevState.find(prev => visible.notificationId in prev);
-        if (!exists) impressions.push(visible);
-      });
-      return [
-        ...prevState,
-        ...visibleNotifications.map(visible => ({
-          [visible.notificationId]: visible.notificationId,
-        })),
-      ];
+    visibleNotifications.forEach(visible => {
+      if (!seenNotifications[visible.notificationId]) {
+        seenNotifications[visible.notificationId] = true;
+        impressions.push(visible);
+      }
     });
+
     dispatch(logImpression(impressions));
   }, []);
   const viewabilityConfigCallbackPairs = useRef([{onViewableItemsChanged}]);
