@@ -1,21 +1,25 @@
 import {useCallback} from 'react';
 import {Linking, StyleSheet, Text, View, useColorScheme} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {COLORS} from '../../../constants';
+import {markButtonAsClicked} from '../../../redux/slices/sendbird';
 import {parseThemeColor} from '../../../utils';
 import NotificationButton from './common/NotificationButton';
 
 // Text only with 2 buttons
 
-export default function Template02({variables}) {
+export default function Template02({notification}) {
   const selectedTheme = useColorScheme();
+  const dispatch = useDispatch();
   const globalSettings = useSelector(state => state.sendbird.globalSettings.themes[0]);
+  const variables = notification.notificationData.templateVariables;
 
   const handleButtonClick = useCallback(
     async side => {
       try {
         const type = variables[`${side}_button_action.type`];
         const data = variables[`${side}_button_action.data`];
+        dispatch(markButtonAsClicked(notification));
 
         if (type === 'web') {
           const supported = await Linking.canOpenURL(data);

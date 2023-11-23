@@ -9,21 +9,20 @@ import TemplateUnknown from './cards/TemplateUnknown';
 export default function Notification({notification}) {
   const notificationData = notification.notificationData;
   const myLastRead = useSelector(state => state.sendbird.feedChannel.myLastRead);
-  const templateVariables = notificationData.templateVariables;
   const isUnread = myLastRead < notification.createdAt;
 
   const InnerNotification = () => {
     if (notificationData.templateKey === 'template-01') {
-      return <Template01 variables={templateVariables} />;
+      return <Template01 notification={notification} />;
     }
     if (notificationData.templateKey === 'template-02') {
-      return <Template02 variables={templateVariables} />;
+      return <Template02 notification={notification} />;
     }
     if (notificationData.templateKey === 'template-03') {
-      return <Template03 variables={templateVariables} />;
+      return <Template03 notification={notification} />;
     }
     if (notificationData.templateKey === 'template-04') {
-      return <Template04 variables={templateVariables} />;
+      return <Template04 notification={notification} />;
     }
 
     return <TemplateUnknown />;

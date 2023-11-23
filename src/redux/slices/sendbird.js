@@ -314,6 +314,31 @@ export const markChannelAsRead = createAsyncThunk('sendbird/markChannelAsRead', 
   }
 });
 
+export const markButtonAsClicked = createAsyncThunk(
+  'sendbird/markButtonAsClicked',
+  async (data, {dispatch, getState}) => {
+    try {
+      const channel = getState().sendbird.feedChannel;
+      await channel.markAsClicked([data]);
+      return;
+    } catch (error) {
+      console.log('markButtonAsClicked Error', error);
+      throw error;
+    }
+  },
+);
+
+export const logImpression = createAsyncThunk('sendbird/logImpression', async (data, {dispatch, getState}) => {
+  try {
+    const channel = getState().sendbird.feedChannel;
+    await channel.logImpression(data);
+    return;
+  } catch (error) {
+    console.log('logImpression Error', error);
+    throw error;
+  }
+});
+
 export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', async data => {
   try {
     // Refreshes the collection. Channel + Notifications

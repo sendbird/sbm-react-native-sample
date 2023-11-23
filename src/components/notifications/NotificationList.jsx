@@ -2,13 +2,14 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import NotificationBell from '../../assets/notification-bell.svg';
-import {loadPrev, markChannelAsRead, refreshCollection} from '../../redux/slices/sendbird';
+import {loadPrev, logImpression, markChannelAsRead, refreshCollection} from '../../redux/slices/sendbird';
 import {parseThemeColor} from '../../utils';
 import CategoryFilters from './CategoryFilters';
 import Notification from './Notification';
 
 export default function NotificationList() {
   const [refreshing, setRefreshing] = useState(false);
+  const seenNotifications = useRef({}).current;
   const flatListRef = useRef();
   const dispatch = useDispatch();
   const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
@@ -62,6 +63,21 @@ export default function NotificationList() {
     }
   }, []);
 
+  const onViewableItemsChanged = useCallback(({viewableItems}) => {
+    const impressions = [];
+    const visibleNotifications = viewableItems.filter(it => it.isViewable).map(({item}) => item);
+
+    visibleNotifications.forEach(visible => {
+      if (!seenNotifications[visible.notificationId]) {
+        seenNotifications[visible.notificationId] = true;
+        impressions.push(visible);
+      }
+    });
+
+    dispatch(logImpression(impressions));
+  }, []);
+  const viewabilityConfigCallbackPairs = useRef([{onViewableItemsChanged}]);
+
   if (isChannelLoading) {
     return (
       <View style={styles.activityIndicator}>
@@ -100,6 +116,7 @@ export default function NotificationList() {
               this.onEndReachedCalledDuringMomentum = false;
             }}
             onRefresh={onRefresh}
+            viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
             refreshing={refreshing}
             renderItem={({item}) => <Notification notification={item} />}
             showsVerticalScrollIndicator={false}
