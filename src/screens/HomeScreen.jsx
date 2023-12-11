@@ -10,7 +10,7 @@ export default function HomeScreen() {
         <HomeHeader />
         <HomeContent />
       </View>
-      <View style={styles.footerContainer}>
+      <View>
         <LogoFooter />
       </View>
     </SafeAreaView>

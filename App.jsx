@@ -31,7 +31,6 @@ function App() {
     let unsubscribe = () => {};
     requestPermissions().then(permissionGranted => {
       if (permissionGranted) {
-        // notificationHandler.startOnAppOpened();
         unsubscribe = notificationHandler.startOnForeground();
       }
     });

@@ -301,18 +301,19 @@ export const handleSignOut = createAsyncThunk('sendbird/handleSignOut', async da
   }
 });
 
-export const markChannelAsRead = createAsyncThunk('sendbird/markChannelAsRead', async (data, {dispatch, getState}) => {
-  try {
-    const channel = getState().sendbird.feedChannel;
-
-    await channel.markAsRead();
-    await notifee.setBadgeCount(0);
-    return;
-  } catch (error) {
-    console.log('markChannelAsRead Error', error);
-    throw error;
-  }
-});
+export const markMessagesAsRead = createAsyncThunk(
+  'sendbird/markMessagesAsRead',
+  async (data, {dispatch, getState}) => {
+    try {
+      const channel = getState().sendbird.feedChannel;
+      await channel.markAsRead(data);
+      return;
+    } catch (error) {
+      console.log('markMessagesAsRead Error', error);
+      throw error;
+    }
+  },
+);
 
 export const markButtonAsClicked = createAsyncThunk(
   'sendbird/markButtonAsClicked',

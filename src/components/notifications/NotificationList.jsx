@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import NotificationBell from '../../assets/notification-bell.svg';
-import {loadPrev, logImpression, markChannelAsRead, refreshCollection} from '../../redux/slices/sendbird';
+import {loadPrev, logImpression, markMessagesAsRead, refreshCollection} from '../../redux/slices/sendbird';
 import {parseThemeColor} from '../../utils';
 import CategoryFilters from './CategoryFilters';
 import Notification from './Notification';
@@ -19,10 +19,6 @@ export default function NotificationList() {
   const listSettings = useSelector(state => state.sendbird.globalSettings.themes[0].list);
   const isCategoryFilterEnabled = useSelector(state => state.sendbird.feedChannel.isCategoryFilterEnabled);
   const notifications = useSelector(state => state.sendbird.notifications);
-
-  useEffect(() => {
-    dispatch(markChannelAsRead());
-  }, []);
 
   const NoNotifications = () => (
     <View style={styles.listEmpty}>
@@ -64,17 +60,17 @@ export default function NotificationList() {
   }, []);
 
   const onViewableItemsChanged = useCallback(({viewableItems}) => {
-    const impressions = [];
+    const trackableNotifications = [];
     const visibleNotifications = viewableItems.filter(it => it.isViewable).map(({item}) => item);
 
-    visibleNotifications.forEach(visible => {
-      if (!seenNotifications[visible.notificationId]) {
-        seenNotifications[visible.notificationId] = true;
-        impressions.push(visible);
+    visibleNotifications.forEach(notification => {
+      if (!seenNotifications[notification.notificationId]) {
+        seenNotifications[notification.notificationId] = true;
+        trackableNotifications.push(notification);
       }
     });
-
-    dispatch(logImpression(impressions));
+    dispatch(markMessagesAsRead(trackableNotifications));
+    dispatch(logImpression(trackableNotifications));
   }, []);
   const viewabilityConfigCallbackPairs = useRef([{onViewableItemsChanged}]);
 
