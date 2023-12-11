@@ -45,7 +45,7 @@ export default function Template03({notification}) {
         <Image
           style={{width: '100%', height: '100%'}}
           source={{
-            uri: variables['banner.url'] || null,
+            uri: variables['image_url.url'] || null,
           }}
         />
       </View>
