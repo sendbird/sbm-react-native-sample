@@ -38,7 +38,6 @@ export default function NotificationList() {
           .then(() => {
             flatListRef.current.scrollToOffset({animated: true, offset: 0});
           });
-        dispatch(markChannelAsRead());
       }}>
       <Text style={styles.newNotificationsText} allowFontScaling={false}>
         New Notifications
