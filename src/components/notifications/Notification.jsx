@@ -8,8 +8,9 @@ import TemplateUnknown from './cards/TemplateUnknown';
 
 export default function Notification({notification}) {
   const notificationData = notification.notificationData;
-  const myLastRead = useSelector(state => state.sendbird.feedChannel.myLastRead);
-  const isUnread = myLastRead < notification.createdAt;
+  const isUnread = notification.messageStatus !== 'READ';
+
+  console.log(notification);
 
   const InnerNotification = () => {
     if (notificationData.templateKey === 'template-01') {
