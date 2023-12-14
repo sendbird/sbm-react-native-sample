@@ -1,4 +1,3 @@
-import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
@@ -37,6 +36,12 @@ const slice = createSlice({
     },
     addNotificationsByCache(state, action) {
       state.notifications = action.payload;
+    },
+    updateNotifications(state, action) {
+      state.notifications = state.notifications.map(notification => {
+        const updatedNotification = action.payload[notification.notificationId];
+        return updatedNotification ? updatedNotification : notification;
+      });
     },
     updateNotificationsLoading(state, action) {
       state.isNotificationsLoading = action.payload;
@@ -89,6 +94,7 @@ export const {
   addNotifications,
   addNotificationsByAPI,
   addNotificationsByCache,
+  updateNotifications,
   updateNotificationsLoading,
   updateHasNewNotifications,
   updateChannel,
@@ -100,8 +106,13 @@ async function registerCollectionHandlers(dispatch, collection) {
     onMessagesAdded: (context, channel, messages) => {
       dispatch(addNotifications(messages));
     },
-    // Notifications cannot currently be updated (WIP)
-    onMessagesUpdated: (context, channel, messages) => {},
+    onMessagesUpdated: (context, channel, messages) => {
+      const updatedNotificationsMap = action.payload.reduce((map, updatedNotification) => {
+        map[updatedNotification.notificationId] = updatedNotification;
+        return map;
+      }, {});
+      dispatch(updateNotifications(updatedNotificationsMap));
+    },
     // Notifications cannot currently be deleted (WIP)
     onMessagesDeleted: (context, channel, messages) => {},
     onChannelUpdated: (context, channel) => {
