@@ -1,4 +1,4 @@
-package com.sendbird.com.notifications.reactnative;
+package com.sendbird.sample.notifications.reactnative;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

@@ -1,41 +1,76 @@
 {
   "project_info": {
-    "project_number": "182696163448",
-    "firebase_url": "https://sendbird-b58d6.firebaseio.com",
-    "project_id": "sendbird-b58d6",
-    "storage_bucket": "sendbird-b58d6.appspot.com"
+    "project_number": "886039521560",
+    "project_id": "sendbird-70574",
+    "storage_bucket": "sendbird-70574.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:182696163448:android:8cf7199483f20d48ad958d",
+        "mobilesdk_app_id": "1:886039521560:android:ae3019c15a89d939fc566d",
         "android_client_info": {
-          "package_name": "com.sendbird.com.notifications.reactnative"
+          "package_name": "com.sendbird.sample.notifications.flutter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "182696163448-4ffjq6onja6tmq37dnkoudfdh26jqpdf.apps.googleusercontent.com",
+          "client_id": "886039521560-7aq0dhbk762dhoo196iggi26sjanj6dn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC7xcrfWsoMGdNmCZc1Vt9ZyT3IS_5TSn4"
+          "current_key": "AIzaSyDrpJnURAwFLrJVSQCzyjVj7fczRKUtrtQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "182696163448-4ffjq6onja6tmq37dnkoudfdh26jqpdf.apps.googleusercontent.com",
+              "client_id": "886039521560-7aq0dhbk762dhoo196iggi26sjanj6dn.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "182696163448-0kle49k5lb7pi1cbrn2193sttbfjae02.apps.googleusercontent.com",
+              "client_id": "886039521560-gum74cd4ca18boda9oo0tqcol0846k3j.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sendbird.com.notifications.reactnative"
+                "bundle_id": "com.tylerhammer.sample.reactnative"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886039521560:android:9744541a0755b402fc566d",
+        "android_client_info": {
+          "package_name": "com.sendbird.sample.notifications.reactnative"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886039521560-7aq0dhbk762dhoo196iggi26sjanj6dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrpJnURAwFLrJVSQCzyjVj7fczRKUtrtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886039521560-7aq0dhbk762dhoo196iggi26sjanj6dn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "886039521560-gum74cd4ca18boda9oo0tqcol0846k3j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tylerhammer.sample.reactnative"
               }
             }
           ]
