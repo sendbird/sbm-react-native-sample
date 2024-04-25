@@ -5,9 +5,9 @@ import {AppState} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {useDispatch, useSelector} from 'react-redux';
 import {refreshCollection, sb} from './src/redux/slices/sendbird';
-import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import NotificationsScreen from './src/screens/NotificationsScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import {notificationHandler, requestPermissions} from './src/utils';
 
 const Stack = createNativeStackNavigator();
@@ -53,8 +53,8 @@ function App() {
         }}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Notifications" component={NotificationsScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
           </>
         ) : (
           <Stack.Screen name="Login" component={LoginScreen} options={{animationTypeForReplace: 'pop'}} />
