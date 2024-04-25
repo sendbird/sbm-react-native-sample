@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {Platform, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useSelector} from 'react-redux';
-import ChevronLeft from '../../assets/chevron-left.svg';
+import SettingIcon from '../../assets/SettingsIcon.svg';
 import {parseThemeColor} from '../../utils';
 
 export default function NotificationListHeader() {

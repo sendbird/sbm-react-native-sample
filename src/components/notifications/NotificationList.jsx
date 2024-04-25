@@ -1,7 +1,7 @@
 import {useCallback, useRef, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import NotificationBell from '../../assets/notification-bell.svg';
+import NotificationBell from '../../assets/NotificationBell.svg';
 import {loadPrev, logImpression, markMessagesAsRead, refreshCollection} from '../../redux/slices/sendbird';
 import {parseThemeColor} from '../../utils';
 import CategoryFilters from './CategoryFilters';
