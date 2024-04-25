@@ -17,24 +17,23 @@ function App() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.sendbird.isAuthenticated);
 
+  useEffect(() => {
+    requestPermissions().then(permissionGranted => {
+      if (permissionGranted) {
+        notificationHandler.startOnAppOpened();
+        return notificationHandler.startOnForeground();
+      }
+    });
+  }, []);
+
   // Refresh collection when app comes back into foreground
   const handleAppStateChange = useCallback(nextAppState => {
     if (nextAppState === 'active' && !!sb?.currentUser) {
-      sb.setForegroundState();
+      // sb.setForegroundState();
       dispatch(refreshCollection());
     } else if (nextAppState === 'background') {
-      sb?.setBackgroundState();
+      // sb?.setBackgroundState();
     }
-  }, []);
-
-  useEffect(() => {
-    let unsubscribe = () => {};
-    requestPermissions().then(permissionGranted => {
-      if (permissionGranted) {
-        unsubscribe = notificationHandler.startOnForeground();
-      }
-    });
-    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
