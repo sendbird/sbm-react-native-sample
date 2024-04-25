@@ -13,7 +13,7 @@
 {
   [FIRApp configure];
 
-  self.moduleName = @"notifications";
+  self.moduleName = @"sendbirdBusinessMessaging";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
@@ -21,7 +21,7 @@
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
   
-  [SendbirdNotificationHelper setAppGroup:@"group.sample.notifications.react-native"];
+  [SendbirdNotificationHelper setAppGroup:@"group.sample.sbm.react-native"];
 
   bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
   

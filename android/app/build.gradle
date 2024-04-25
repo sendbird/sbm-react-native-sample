@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.sendbird.sample.notifications.reactnative"
+    namespace "com.sendbird.sample.sbm.reactnative"
     defaultConfig {
-        applicationId "com.sendbird.sample.notifications.reactnative"
+        applicationId "com.sendbird.sample.sbm.reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

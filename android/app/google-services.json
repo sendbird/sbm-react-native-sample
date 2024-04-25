@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:886039521560:android:ae3019c15a89d939fc566d",
         "android_client_info": {
-          "package_name": "com.sendbird.sample.notifications.flutter"
+          "package_name": "com.sendbird.sample.sbm.flutter"
         }
       },
       "oauth_client": [
@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:886039521560:android:9744541a0755b402fc566d",
         "android_client_info": {
-          "package_name": "com.sendbird.sample.notifications.reactnative"
+          "package_name": "com.sendbird.sample.sbm.reactnative"
         }
       },
       "oauth_client": [
