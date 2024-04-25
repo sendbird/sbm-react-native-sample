@@ -6,13 +6,7 @@ import {isSendbirdNotification, parseSendbirdNotification} from '@sendbird/uikit
 import {Platform} from 'react-native';
 import {requestNotifications} from 'react-native-permissions';
 import {navigationRef} from '../../App';
-import {
-  initSendbird,
-  refreshCollection,
-  refreshTemplateList,
-  sb,
-  updateHasNewNotifications,
-} from '../redux/slices/sendbird';
+import {initSendbird, refreshCollection, sb, updateHasNewNotifications} from '../redux/slices/sendbird';
 import {dispatch, store} from '../redux/store';
 
 class AndroidNotificationHandler {
@@ -47,6 +41,7 @@ class AndroidNotificationHandler {
       notifee.onForegroundEvent(async ({type, detail}) => {
         try {
           if (type === EventType.PRESS && detail.notification && isSendbirdNotification(detail.notification.data)) {
+            sb.markPushNotificationAsClicked(detail.notification.data);
             navigationRef.current?.navigate('Notifications');
           }
         } catch (error) {
@@ -61,6 +56,7 @@ class AndroidNotificationHandler {
     notifee.onBackgroundEvent(async ({type, detail}) => {
       try {
         if (type === EventType.PRESS && detail.notification && isSendbirdNotification(detail.notification.data)) {
+          sb.markPushNotificationAsClicked(detail.notification.data);
           navigationRef.current?.navigate('Notifications');
         }
       } catch (error) {
@@ -71,6 +67,7 @@ class AndroidNotificationHandler {
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       try {
         if (isSendbirdNotification(remoteMessage.data)) {
+          sb.markPushNotificationAsDelivered(remoteMessage.data);
           await this.displayNotification(remoteMessage);
         }
       } catch (error) {
@@ -109,7 +106,10 @@ class iOSNotificationHandler {
         const isClicked = data?.userInteraction === 1;
         const localData = JSON.parse(await AsyncStorage.getItem('loginInformation'));
         if (data) {
+          sb.markPushNotificationAsDelivered(data);
+
           if (isClicked && isSendbirdNotification(data)) {
+            sb.markPushNotificationAsClicked(data);
             if (store.getState().isAuthenticated) {
               navigationRef.current?.navigate('Notifications');
             } else if (localData.isSignedIn) {
@@ -162,6 +162,7 @@ class iOSNotificationHandler {
             }
           case EventType.DELIVERED:
             try {
+              sb.markPushNotificationAsDelivered(data);
               break;
             } catch (error) {
               console.error(error);

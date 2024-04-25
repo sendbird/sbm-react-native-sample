@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import SendbirdChat, {CollectionEventSource, SessionHandler} from '@sendbird/chat';
+import SendbirdChat, {CollectionEventSource, DeviceOsPlatform, SessionHandler} from '@sendbird/chat';
 import {FeedChannelModule} from '@sendbird/chat/feedChannel';
 import {MessageCollectionInitPolicy, MessageFilter} from '@sendbird/chat/groupChannel';
 import {Platform} from 'react-native';
+import {getManufacturer} from 'react-native-device-info';
 import {checkNotifications} from 'react-native-permissions';
 
 export let sb;
@@ -210,10 +211,24 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
       // Register push if permission is granted
       if (Platform.OS === 'ios') {
         const token = await messaging().getAPNSToken();
-        await sb.registerAPNSPushTokenForCurrentUser(token);
+        await sb.registerAPNSPushTokenForCurrentUser(token, {
+          deviceOS: {
+            platform: DeviceOsPlatform.IOS,
+            version: String(Platform.Version),
+          },
+          deviceManufacturer: await getManufacturer(),
+          systemPushEnabled: true,
+        });
       } else if (Platform.OS === 'android') {
         const token = await messaging().getToken();
-        await sb.registerFCMPushTokenForCurrentUser(token);
+        await sb.registerFCMPushTokenForCurrentUser(token, {
+          deviceOS: {
+            platform: DeviceOsPlatform.ANDROID,
+            version: String(Platform.Version),
+          },
+          deviceManufacturer: await getManufacturer(),
+          systemPushEnabled: true,
+        });
       }
     }
 
@@ -414,3 +429,24 @@ export const loadPrev = createAsyncThunk('sendbird/loadPrev', async (data, {getS
     throw error;
   }
 });
+export const markPushNotificationAsDelivered = createAsyncThunk(
+  'sendbird/markPushNotificationAsDelivered',
+  async (data, {getState}) => {},
+);
+
+async function getTemplates(token = '') {
+  let hasMore = true;
+  let templates = {};
+  while (hasMore) {
+    const response = await sb.feedChannel.getNotificationTemplateListByToken(token);
+    const data = JSON.parse(response.notificationTemplateList.jsonString);
+    data.templates.forEach(template => {
+      !template['color_variables'] && (template['color_variables'] = {});
+      templates[template.key] = template;
+    });
+    token = response.token;
+    hasMore = response.hasMore;
+  }
+
+  return templates;
+}
