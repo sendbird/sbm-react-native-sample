@@ -111,7 +111,7 @@ export const {
   updateUnreadCount,
 } = slice.actions;
 
-async function registerCollectionHandlers(dispatch, collection) {
+async function registerCollectionHandlers(dispatch, getState, collection) {
   const handler = {
     onMessagesAdded: (context, channel, messages) => {
       let shouldRefreshTemplates = false;
@@ -127,7 +127,7 @@ async function registerCollectionHandlers(dispatch, collection) {
       shouldRefreshTemplates && dispatch(refreshTemplateList());
       dispatch(addNotifications(newNotifications));
     },
-    // Notifications cannot currently be deleted (WIP)
+    onMessagesUpdated: (context, channel, messages) => {},
     onMessagesDeleted: (context, channel, messages) => {},
     onChannelUpdated: (context, channel) => {
       if (
@@ -263,6 +263,12 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
     // If the user is on the Notification list, we want to render an ActivityIndicator
     dispatch(updateNotificationsLoading(true));
 
+    // Dipose of any existing collection in order to prevent duplicates
+    const existingCollection = getState().sendbird.collection;
+    if (existingCollection) {
+      existingCollection.dispose();
+    }
+
     // Check if we passed a new filter to the collection
     let selectedFilter = data?.selectedFilter || getState().sendbird.activeFilter;
 
@@ -270,7 +276,7 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
 
     let channel;
 
-    if (channelUrl !== '') {
+    if (channelUrl && channelUrl !== '') {
       channel = await sb.feedChannel.getChannel(channelUrl);
     } else {
       const queryParams = {
@@ -297,12 +303,14 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
       filter: filter,
       limit: 20,
       startingPoint: Date.now(),
+      nextResultLimit: 10,
+      prevResultLimit: 0,
     };
 
     // Create the collection
     const collection = channel.createNotificationCollection(params);
     // Register collectionHandlers for when refresh is triggered
-    registerCollectionHandlers(dispatch, collection);
+    registerCollectionHandlers(dispatch, getState, collection);
 
     collection
       .initialize(MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API)
@@ -318,7 +326,6 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
         });
         dispatch(addNotificationsByAPI(messages));
         shouldRefreshTemplates && dispatch(refreshTemplateList());
-        dispatch(addNotificationsByAPI(messages));
       });
 
     return {
@@ -370,7 +377,7 @@ export const markButtonAsClicked = createAsyncThunk(
   async (data, {dispatch, getState}) => {
     try {
       const channel = getState().sendbird.feedChannel;
-      await channel.markAsClicked([data]);
+      await channel.logClicked([data]);
       return;
     } catch (error) {
       console.error('markButtonAsClicked Error', error);
@@ -379,10 +386,10 @@ export const markButtonAsClicked = createAsyncThunk(
   },
 );
 
-export const logImpression = createAsyncThunk('sendbird/logImpression', async (data, {dispatch, getState}) => {
+export const logImpression = createAsyncThunk('sendbird/logViewed', async (data, {dispatch, getState}) => {
   try {
     const channel = getState().sendbird.feedChannel;
-    await channel.logImpression(data);
+    await channel.logViewed(data);
     return;
   } catch (error) {
     console.error('logViewed Error', error);
@@ -390,7 +397,7 @@ export const logImpression = createAsyncThunk('sendbird/logImpression', async (d
   }
 });
 
-export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', async data => {
+export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', async (data, {getState}) => {
   try {
     // Refreshes the collection. Channel + Notifications
     sb.feedChannel.refreshNotificationCollections();
