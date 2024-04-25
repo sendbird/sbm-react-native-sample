@@ -20,6 +20,7 @@ const initialState = {
   collection: null,
   activeFilter: '*', // Default value for "All" filter
   unreadCount: 0,
+  initialLoadComplete: false,
   hasNewNotifications: false,
   isChannelLoading: true,
   isNotificationsLoading: true,
@@ -73,6 +74,9 @@ const slice = createSlice({
       state.activeFilter = activeFilter;
       state.unreadCount = feedChannel.unreadMessageCount;
       state.isChannelLoading = false;
+      if (state.initialLoadComplete === false) {
+        state.initialLoadComplete = true;
+      }
     });
     builder.addCase(handleSignOut.fulfilled, () => initialState);
     builder.addCase(loadPrev.fulfilled, (state, action) => {
