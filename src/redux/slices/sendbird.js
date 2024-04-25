@@ -184,7 +184,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
           // session is refreshed
         },
         onSessionError: err => {
-          console.log('onSessionError', err);
+          console.error('onSessionError', err);
           dispatch(handleSignOut());
           // session refresh failed
         },
@@ -249,7 +249,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
       templates: templates,
     };
   } catch (error) {
-    console.log('initSendbird Error', error);
+    console.error('initSendbird Error', error);
     throw error;
   }
 });
@@ -323,7 +323,7 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
       collection: collection,
     };
   } catch (error) {
-    console.log('collectionInit Error', error);
+    console.error('collectionInit Error', error);
     throw error;
   }
 });
@@ -342,7 +342,7 @@ export const handleSignOut = createAsyncThunk('sendbird/handleSignOut', async da
     AsyncStorage.mergeItem('loginInformation', JSON.stringify({isSignedIn: false}));
     return;
   } catch (error) {
-    console.log('handleSignOut Error', error);
+    console.error('handleSignOut Error', error);
     throw error;
   }
 });
@@ -355,7 +355,7 @@ export const markMessagesAsRead = createAsyncThunk(
       await channel.markAsRead(data);
       return;
     } catch (error) {
-      console.log('markMessagesAsRead Error', error);
+      console.error('markMessagesAsRead Error', error);
       throw error;
     }
   },
@@ -369,7 +369,7 @@ export const markButtonAsClicked = createAsyncThunk(
       await channel.markAsClicked([data]);
       return;
     } catch (error) {
-      console.log('markButtonAsClicked Error', error);
+      console.error('markButtonAsClicked Error', error);
       throw error;
     }
   },
@@ -381,7 +381,7 @@ export const logImpression = createAsyncThunk('sendbird/logImpression', async (d
     await channel.logImpression(data);
     return;
   } catch (error) {
-    console.log('logImpression Error', error);
+    console.error('logViewed Error', error);
     throw error;
   }
 });
@@ -393,10 +393,11 @@ export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', 
     // We don't actually need to return anything since updating will happen via the handlers
     return {};
   } catch (error) {
-    console.log('refreshCollection Error', error);
+    console.error('refreshCollection Error', error);
     throw error;
   }
 });
+
 export const refreshTemplateList = createAsyncThunk('sendbird/refreshTemplateList', async (data, {dispatch}) => {
   return await getTemplates();
 });
@@ -408,7 +409,7 @@ export const disposeCollection = createAsyncThunk('sendbird/disposeCollection', 
     dispatch(initCollection());
     return;
   } catch (error) {
-    console.log('disposeCollection Error', error);
+    console.error('disposeCollection Error', error);
     throw error;
   }
 });
@@ -428,7 +429,7 @@ export const loadNext = createAsyncThunk('sendbird/loadNext', async data => {
       abort();
     }
   } catch (error) {
-    console.log('loadNext Error', error);
+    console.error('loadNext Error', error);
     throw error;
   }
 });
@@ -448,10 +449,11 @@ export const loadPrev = createAsyncThunk('sendbird/loadPrev', async (data, {getS
       abort();
     }
   } catch (error) {
-    console.log('loadPrev Error', error);
+    console.error('loadPrev Error', error);
     throw error;
   }
 });
+
 export const markPushNotificationAsDelivered = createAsyncThunk(
   'sendbird/markPushNotificationAsDelivered',
   async (data, {getState}) => {},
