@@ -1,6 +1,6 @@
 # Sendbird Business Messaging React Native Sample
 
-This sample application is a demo of the Sendbird Notifications product.
+This sample application is a demo of the Sendbird Business Messaging product.
 Built in React Native using the core JavaScript SDK.
 
 ## Prerequisite
