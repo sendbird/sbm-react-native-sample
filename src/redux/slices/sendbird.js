@@ -16,6 +16,7 @@ const initialState = {
   currentChannelUrl: '',
   notifications: [],
   globalSettings: {},
+  templates: {},
   collection: null,
   activeFilter: '*', // Default value for "All" filter
   unreadCount: 0,
@@ -59,8 +60,9 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(initSendbird.fulfilled, (state, action) => {
-      const {globalSettings, currentChannelUrl} = action.payload;
+      const {globalSettings, currentChannelUrl, templates} = action.payload;
       state.globalSettings = globalSettings;
+      state.templates = templates;
       state.currentChannelUrl = currentChannelUrl;
       state.isAuthenticated = true;
     });
@@ -84,6 +86,9 @@ const slice = createSlice({
     builder.addCase(refreshCollection.fulfilled, (state, action) => {
       state.hasNewNotifications = false;
     });
+    builder.addCase(refreshTemplateList.fulfilled, (state, action) => {
+      state.templates = action.payload;
+    });
   },
 });
 
@@ -105,14 +110,18 @@ export const {
 async function registerCollectionHandlers(dispatch, collection) {
   const handler = {
     onMessagesAdded: (context, channel, messages) => {
-      dispatch(addNotifications(messages));
-    },
-    onMessagesUpdated: (context, channel, messages) => {
-      const updatedNotificationsMap = action.payload.reduce((map, updatedNotification) => {
-        map[updatedNotification.notificationId] = updatedNotification;
-        return map;
-      }, {});
-      dispatch(updateNotifications(updatedNotificationsMap));
+      let shouldRefreshTemplates = false;
+      const currentNotifications = getState().sendbird.notifications;
+      const newNotifications = messages.filter(
+        message => !currentNotifications.some(notification => notification.notificationId === message.notificationId),
+      );
+      newNotifications.forEach(message => {
+        if (!getState().sendbird.templates[message.template]) {
+          shouldRefreshTemplates = true;
+        }
+      });
+      shouldRefreshTemplates && dispatch(refreshTemplateList());
+      dispatch(addNotifications(newNotifications));
     },
     // Notifications cannot currently be deleted (WIP)
     onMessagesDeleted: (context, channel, messages) => {},
@@ -205,6 +214,8 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     // You may not need these if you don't wish to determine theme via Sendbird Dashboard
     const globalSettings = JSON.parse((await sb.feedChannel.getGlobalNotificationChannelSetting()).jsonString);
 
+    const templates = await getTemplates();
+
     // Request permission for push notifications
     const {status} = await checkNotifications();
     if (status === 'granted') {
@@ -235,6 +246,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     return {
       globalSettings: globalSettings,
       currentChannelUrl: data.channelUrl,
+      templates: templates,
     };
   } catch (error) {
     console.log('initSendbird Error', error);
@@ -294,6 +306,14 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
         dispatch(addNotificationsByCache(messages));
       })
       .onApiResult((err, messages) => {
+        let shouldRefreshTemplates = false;
+        messages.forEach(message => {
+          if (!getState().sendbird.templates[message.template]) {
+            shouldRefreshTemplates = true;
+          }
+        });
+        dispatch(addNotificationsByAPI(messages));
+        shouldRefreshTemplates && dispatch(refreshTemplateList());
         dispatch(addNotificationsByAPI(messages));
       });
 
@@ -376,6 +396,9 @@ export const refreshCollection = createAsyncThunk('sendbird/refreshCollection', 
     console.log('refreshCollection Error', error);
     throw error;
   }
+});
+export const refreshTemplateList = createAsyncThunk('sendbird/refreshTemplateList', async (data, {dispatch}) => {
+  return await getTemplates();
 });
 
 export const disposeCollection = createAsyncThunk('sendbird/disposeCollection', async (data, {dispatch, getState}) => {
