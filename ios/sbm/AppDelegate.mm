@@ -21,7 +21,7 @@
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
   
-  [SendbirdNotificationHelper setAppGroup:@"group.sample.sbm.react-native"];
+  [SendbirdNotificationHelper setAppGroup:@"group.com.sendbird.sample.sbm.reactnative"];
 
   bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
   

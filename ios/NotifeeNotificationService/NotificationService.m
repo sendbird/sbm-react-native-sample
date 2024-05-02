@@ -25,7 +25,7 @@
   NSLog(@"%@", request);
   NSLog(@"Logging Notification");
   
-  [SendbirdNotificationHelper setAppGroup:@"group.sample.chat.react-native"];
+  [SendbirdNotificationHelper setAppGroup:@"group.com.sendbird.sample.sbm.reactnative"];
   
   [SendbirdNotificationHelper markPushNotificationAsDelivered:self.bestAttemptContent.userInfo completionHandler:^(NSError * _Nullable error) {
         if (error != nil) NSLog(@"markPushNotificationAsDelivered error: %@", [error localizedDescription]);

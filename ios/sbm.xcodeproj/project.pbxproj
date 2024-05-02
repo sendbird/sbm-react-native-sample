@@ -75,6 +75,7 @@
 		C520A3212B4F8896003790DB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5604A1F2AD7B06700E3B731 /* sbm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = sbm.entitlements; path = sbm/sbm.entitlements; sourceTree = "<group>"; };
 		C5604A202AD7B7C100E3B731 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C5D4616E2BE35C9600ADD734 /* NotifeeNotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotifeeNotificationService.entitlements; sourceTree = "<group>"; };
 		CAB78AF3C6CD08E15C4C876A /* Pods_notifications_notificationsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_notifications_notificationsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1973BD911249BF9FB56056C /* Pods_notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -200,6 +201,7 @@
 		C520A31D2B4F8896003790DB /* NotifeeNotificationService */ = {
 			isa = PBXGroup;
 			children = (
+				C5D4616E2BE35C9600ADD734 /* NotifeeNotificationService.entitlements */,
 				C520A31E2B4F8896003790DB /* NotificationService.h */,
 				C520A31F2B4F8896003790DB /* NotificationService.m */,
 				C520A3212B4F8896003790DB /* Info.plist */,
@@ -1033,6 +1035,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = NotifeeNotificationService/NotifeeNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1076,6 +1079,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = NotifeeNotificationService/NotifeeNotificationService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
