@@ -106,8 +106,6 @@ class iOSNotificationHandler {
         const isClicked = data?.userInteraction === 1;
         const localData = JSON.parse(await AsyncStorage.getItem('loginInformation'));
         if (data) {
-          sb.markPushNotificationAsDelivered(data);
-
           if (isClicked && isSendbirdNotification(data)) {
             sb.markPushNotificationAsClicked(data);
             if (store.getState().isAuthenticated) {
