@@ -99,31 +99,7 @@ class AndroidNotificationHandler {
   };
 }
 class iOSNotificationHandler {
-  startOnAppOpened() {
-    PushNotificationIOS.getInitialNotification().then(async notification => {
-      try {
-        const data = notification?.getData();
-        const isClicked = data?.userInteraction === 1;
-        const localData = JSON.parse(await AsyncStorage.getItem('loginInformation'));
-        if (data) {
-          if (isClicked && isSendbirdNotification(data)) {
-            sb.markPushNotificationAsClicked(data);
-            if (store.getState().isAuthenticated) {
-              navigationRef.current?.navigate('Notifications');
-            } else if (localData.isSignedIn) {
-              dispatch(initSendbird(localData))
-                .unwrap()
-                .then(() => {
-                  navigationRef.current?.navigate('Notifications');
-                });
-            }
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    });
-  }
+  startOnAppOpened() {}
   startOnForeground() {
     const unsubscribes = [];
     PushNotificationIOS.addEventListener('notification', async notification => {
@@ -153,6 +129,7 @@ class iOSNotificationHandler {
         switch (type) {
           case EventType.PRESS:
             try {
+              sb.markPushNotificationAsClicked(data);
               navigationRef.current?.navigate('Notifications');
               break;
             } catch (error) {
