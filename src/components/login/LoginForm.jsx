@@ -126,14 +126,14 @@ export default function LoginForm() {
         placeholder="Token"
         placeholderTextColor="#00000050"
       />
-      {/* <TextInput
+      <TextInput
         style={styles.textInput}
         autoCapitalize="none"
         value={state.channelUrl}
         onChangeText={text => handleTextChange('channelUrl', text)}
         placeholder="Channel URL (Optional)"
         placeholderTextColor="#00000050"
-      /> */}
+      />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         {state.isLoading ? <ActivityIndicator /> : <Text style={styles.buttonText}>Sign in</Text>}
