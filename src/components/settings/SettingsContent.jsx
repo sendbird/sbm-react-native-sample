@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DnDIcon from '../../assets/DnDIcon.svg';
 import ExitIcon from '../../assets/ExitIcon.svg';
 import ThemeIcon from '../../assets/ThemeIcon.svg';
@@ -12,6 +12,7 @@ export default function SettingsContent() {
     darkTheme: false,
     doNotDisturb: false,
   });
+  const user = useSelector(state => state.sendbird.user);
 
   const dispatch = useDispatch();
 
@@ -23,7 +24,7 @@ export default function SettingsContent() {
     return (
       <View style={styles.avatarContainer}>
         <FastImage style={styles.avatarImage} source={require('../../assets/Avatar.png')} />
-        <Text style={styles.avatarText}>Mickey Cheong</Text>
+        <Text style={styles.avatarText}>{user.nickname}</Text>
       </View>
     );
   };
@@ -33,7 +34,7 @@ export default function SettingsContent() {
       <View style={styles.userContainer}>
         <View style={styles.userContainerWrapper}>
           <Text style={styles.userPrimaryText}>User ID</Text>
-          <Text style={styles.userSecondaryText}>mickey</Text>
+          <Text style={styles.userSecondaryText}>{user.userId}</Text>
         </View>
       </View>
     );

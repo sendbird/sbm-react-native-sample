@@ -13,6 +13,7 @@ export let sb;
 const initialState = {
   isAuthenticated: false, // Used to force user to login page
   feedChannel: {},
+  user: {},
   currentChannelUrl: '',
   notifications: [],
   globalSettings: {},
@@ -61,7 +62,8 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(initSendbird.fulfilled, (state, action) => {
-      const {globalSettings, currentChannelUrl, templates} = action.payload;
+      const {globalSettings, currentChannelUrl, templates, user} = action.payload;
+      state.user = user;
       state.globalSettings = globalSettings;
       state.templates = templates;
       state.currentChannelUrl = currentChannelUrl;
@@ -172,6 +174,8 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     // Initialize the Sendbird application with the FeedModule
     sb = SendbirdChat.init({
       appId: data.appId,
+      // customApiHost: 'https://api-preprod.sendbird.com',
+      // customWebSocketHost: 'wss://ws-preprod.sendbird.com',
       modules: [new FeedChannelModule()],
       newInstance: sb?.appId !== data.appId,
     });
@@ -200,7 +204,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     );
 
     // Log in using only the API, not with Websocket to prevent unwanted MAU increases.
-    await sb.authenticateFeed(data.userId, data.token);
+    const user = await sb.authenticateFeed(data.userId, data.token);
 
     // Storing the login information in AsyncStorage for later use
     await AsyncStorage.setItem(
@@ -248,6 +252,7 @@ export const initSendbird = createAsyncThunk('sendbird/init', async (data, {disp
     }
 
     return {
+      user: user,
       globalSettings: globalSettings,
       currentChannelUrl: data.channelUrl,
       templates: templates,
