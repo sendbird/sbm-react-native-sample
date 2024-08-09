@@ -308,8 +308,8 @@ export const initCollection = createAsyncThunk('sendbird/initCollection', async 
       filter: filter,
       limit: 20,
       startingPoint: Date.now(),
-      nextResultLimit: 10,
-      prevResultLimit: 0,
+      nextResultLimit: 0,
+      prevResultLimit: 20,
     };
 
     // Create the collection
