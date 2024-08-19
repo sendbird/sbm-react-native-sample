@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {Platform, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
 import {useSelector} from 'react-redux';
-import ChevronLeft from '../../assets/chevron-left.svg';
+import SettingIcon from '../../assets/SettingsIcon.svg';
 import {parseThemeColor} from '../../utils';
 
 export default function NotificationListHeader() {
@@ -12,12 +12,10 @@ export default function NotificationListHeader() {
   return (
     <>
       <View style={styles.outerContainer(headerSettings, selectedTheme)}>
-        <View style={styles.innerContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeft height={24} width={24} style={styles.image(headerSettings, selectedTheme)} />
-          </TouchableOpacity>
-          <Text style={styles.text(headerSettings, selectedTheme)}>Notifications</Text>
-        </View>
+        <Text style={styles.text(headerSettings, selectedTheme)}>Notifications</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.iconButton}>
+          <SettingIcon height={22} width={22} style={styles.icon(headerSettings, selectedTheme)} />
+        </TouchableOpacity>
       </View>
       <View style={styles.headerLine(headerSettings, selectedTheme)} />
     </>
@@ -27,6 +25,8 @@ export default function NotificationListHeader() {
 const styles = StyleSheet.create({
   outerContainer: (headerSettings, selectedTheme) => ({
     width: '100%',
+    paddingLeft: 20,
+    paddingRight: 16,
     flexDirection: 'row',
     paddingTop: Platform.OS === 'android' ? 10 : 0,
     paddingBottom: 12,
@@ -34,18 +34,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: parseThemeColor(headerSettings.lineColor, selectedTheme),
   }),
-  innerContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginLeft: 10,
-  },
   text: (headerSettings, selectedTheme) => ({
     fontSize: headerSettings.textSize,
     fontWeight: headerSettings.fontWeight,
-    marginLeft: 8,
     color: parseThemeColor(headerSettings.textColor, selectedTheme),
   }),
-  image: (headerSettings, selectedTheme) => ({
+  iconButton: {
+    marginLeft: 'auto',
+  },
+  icon: (headerSettings, selectedTheme) => ({
     color: parseThemeColor(headerSettings.buttonIconTintColor, selectedTheme),
   }),
   headerLine: (headerSettings, selectedTheme) => ({

@@ -2,22 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>182696163448-0kle49k5lb7pi1cbrn2193sttbfjae02.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.182696163448-0kle49k5lb7pi1cbrn2193sttbfjae02</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBE28QHCTvVKqI-RoFiANLXmFJ-SQCY2Uk</string>
+	<string>AIzaSyC3X6-IwjH_Ial8cUCfbOlelEGk1GPJp2E</string>
 	<key>GCM_SENDER_ID</key>
-	<string>182696163448</string>
+	<string>886039521560</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.sendbird.com.notifications.reactnative</string>
+	<string>com.sendbird.sample.sbm.reactnative</string>
 	<key>PROJECT_ID</key>
-	<string>sendbird-b58d6</string>
+	<string>sendbird-70574</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sendbird-b58d6.appspot.com</string>
+	<string>sendbird-70574.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:182696163448:ios:83da0e3577e6b479ad958d</string>
-	<key>DATABASE_URL</key>
-	<string>https://sendbird-b58d6.firebaseio.com</string>
+	<string>1:886039521560:ios:2f37cd8870e78367fc566d</string>
 </dict>
 </plist>

@@ -1,11 +1,21 @@
+import {NotificationPreview} from '@tylerhammer/notifications-template-preview-react-native';
 import {useCallback, useRef, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View, useColorScheme} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
-import NotificationBell from '../../assets/notification-bell.svg';
+import NotificationBell from '../../assets/NotificationBell.svg';
 import {loadPrev, logImpression, markMessagesAsRead, refreshCollection} from '../../redux/slices/sendbird';
 import {parseThemeColor} from '../../utils';
 import CategoryFilters from './CategoryFilters';
-import Notification from './Notification';
 
 export default function NotificationList() {
   const [refreshing, setRefreshing] = useState(false);
@@ -13,6 +23,8 @@ export default function NotificationList() {
   const flatListRef = useRef();
   const dispatch = useDispatch();
   const hasNewNotifications = useSelector(state => state.sendbird.hasNewNotifications);
+  const globalSettings = useSelector(state => state.sendbird.globalSettings.themes[0]);
+  const templates = useSelector(state => state.sendbird.templates);
   const selectedTheme = useColorScheme();
   const isNotificationsLoading = useSelector(state => state.sendbird.isNotificationsLoading);
   const isChannelLoading = useSelector(state => state.sendbird.isChannelLoading);
@@ -38,7 +50,6 @@ export default function NotificationList() {
           .then(() => {
             flatListRef.current.scrollToOffset({animated: true, offset: 0});
           });
-        dispatch(markChannelAsRead());
       }}>
       <Text style={styles.newNotificationsText} allowFontScaling={false}>
         New Notifications
@@ -55,7 +66,7 @@ export default function NotificationList() {
           setRefreshing(false);
         });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, []);
 
@@ -113,8 +124,45 @@ export default function NotificationList() {
             }}
             onRefresh={onRefresh}
             viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+            ItemSeparatorComponent={() => <View style={{height: 16}} />}
             refreshing={refreshing}
-            renderItem={({item}) => <Notification notification={item} />}
+            renderItem={({item}) => (
+              <NotificationPreview
+                globalTheme={globalSettings}
+                template={templates[item.notificationData.templateKey]}
+                notification={item}
+                useLayout={true}
+                themeMode="light"
+                customImageComponent={props => {
+                  return (
+                    <FastImage
+                      style={{
+                        ...(!props.parsedProperties?.imageStyles.height ? {aspectRatio: 686 / 320} : null),
+                        ...props.parsedProperties?.imageStyles,
+                      }}
+                      source={{uri: props.imageUrl, priority: FastImage.priority.normal}}
+                      resizeMode={props.parsedProperties?.resizeMode}
+                    />
+                  );
+                }}
+                handlePress={props => {
+                  switch (props.action?.type) {
+                    case 'web': {
+                      if (!props.action.data.startsWith('http://') || !props.action.data.startsWith('https://')) {
+                        return Linking.openURL(`https://${props.action.data}`);
+                      }
+                      return Linking.openURL(props.action.data);
+                    }
+                    case 'uikit': {
+                      return console.warn(props.action.data);
+                    }
+                    case 'custom': {
+                      return;
+                    }
+                  }
+                }}
+              />
+            )}
             showsVerticalScrollIndicator={false}
           />
         </View>
